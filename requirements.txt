@@ -1,0 +1,5 @@
+streamlit
+pdfplumber
+openai
+reportlab
+git filter-repo --path app.py --replace-text <(echo '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==>REDACTED')
