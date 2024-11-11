@@ -6,9 +6,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import os
 
-# Set OpenAI API Key
-openai.api_key = os.getenv("***REMOVED***")
-
 # Function to Extract Data from PDF
 def extract_data_from_pdf(file_path):
     with pdfplumber.open(file_path) as pdf:
@@ -17,18 +14,23 @@ def extract_data_from_pdf(file_path):
             text += page.extract_text() + "\n"
     return text
 
-# Function to Generate Credit Analysis using the Updated OpenAI Chat API
+# Set up the API key from environment variables
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Function to Generate Credit Analysis using OpenAI Completion API
 def generate_credit_analysis(extracted_data):
-    messages = [
-        {"role": "system", "content": "You are a financial analyst that provides summaries of credit data."},
-        {"role": "user", "content": f"Analyze the following credit data and provide a summary:\n\n{extracted_data}"}
-    ]
-    response = openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo",
-        messages=messages,
+    prompt = (
+        "You are a financial analyst. Analyze the following credit data and provide a summary:\n\n"
+        f"{extracted_data}"
+    )
+    response = openai.Completion.create(
+        model="text-davinci-003",  # Use "text-davinci-003" for non-chat completions
+        prompt=prompt,
         max_tokens=500
     )
-    return response.choices[0].message['content'].strip()
+    return response.choices[0].text.strip()
+
+
 
 # Function to Generate PDF Report
 def create_pdf_report(analysis_text, output_path="credit_analysis_report.pdf"):
