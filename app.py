@@ -17,13 +17,13 @@ def extract_data_from_pdf(file_path):
             text += page.extract_text() + "\n"
     return text
 
-# Function to Generate Credit Analysis using OpenAI Chat API
+# Function to Generate Credit Analysis using the Updated OpenAI Chat API
 def generate_credit_analysis(extracted_data):
     messages = [
         {"role": "system", "content": "You are a financial analyst that provides summaries of credit data."},
         {"role": "user", "content": f"Analyze the following credit data and provide a summary:\n\n{extracted_data}"}
     ]
-    response = openai.ChatCompletion.create(
+    response = openai.ChatCompletion.acreate(
         model="gpt-3.5-turbo",
         messages=messages,
         max_tokens=500
